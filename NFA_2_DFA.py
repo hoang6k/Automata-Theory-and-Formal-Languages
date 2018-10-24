@@ -1,14 +1,17 @@
 from collections import deque
+from create_graph import create_graph_FA
 
 class Automata():
-    def __init__(self, Q, A, delta, q0, F):
+    def __init__(self, Q, A, delta, q0, F, type='NFA'):
         self.Q = Q
         self.A = A
         self.delta = delta
         self.q0 = q0
         self.F = F
+        self.type = type
     
     def print_automata(self):
+        print(self.type)
         print('\tQ:', end=' ')
         for item in self.Q:
             print(item, end=' ')
@@ -38,24 +41,22 @@ class Automata():
         delta = []
         for i in range(num_delta):
             nums = [''.join(['q', item]) for item in lines[i + 5].split()]
-            delta.append(Delta([nums[0]], nums[1][1:], nums[2:]))
+            delta.append(Delta(nums[0], nums[1][1:], nums[2:]))
         del lines, nums, i
-        print('NFA:')
         NFA = Automata(Q, A_DFA, delta, 'q0', F)
-        NFA.print_automata()
         return NFA
     
-    def convert_DFA(NFA):
-        Q_DFA = []
-        delta_DFA = []
+    def convert_to_DFA(NFA):
+        Q = []
+        delta = []
         S = deque([[NFA.q0]])
         while len(S) > 0:
             p = S.popleft()
-            Q_DFA.append(p)
+            Q.append(p)
         #    print(p)
             delta_set = []
             for item in p:
-                delta_set += Delta.find_state(NFA.delta, [item])
+                delta_set += Delta.find_state(NFA.delta, item)
             for c in NFA.A:
                 q_set = []
                 for item in delta_set:
@@ -66,23 +67,23 @@ class Automata():
                     continue
                 q_set = list(set(q_set))
                 q_set.sort()
-                delta_DFA.append(Delta(p, c, q_set))
+                delta.append(Delta(p, c, q_set, type='DFA'))
         #        delta_DFA[-1].print()
                 try:
-                    Q_DFA.index(q_set)
+                    Q.index(q_set)
                 except ValueError:
                     S.append(q_set)
-        Q_DFA = sorted(Q_DFA, key=lambda item: len(item))
-        delta_DFA = sorted(delta_DFA, key=lambda item: len(item.q))
-        F_DFA = [item for item in Q_DFA if set(item) & NFA.F]
-        print('\nDFA:')
-        DFA = Automata(Q_DFA, NFA.A, delta_DFA, [NFA.q0], F_DFA)
-        DFA.print_automata()
+        Q = sorted(Q, key=lambda item: len(item))
+        delta = sorted(delta, key=lambda item: len(item.q))
+        F = [item for item in Q if set(item) & NFA.F]
+        DFA = Automata(Q, NFA.A, delta, [NFA.q0], F, 'DFA')
+        return DFA
 
 class Delta():
-    def __init__(self, q, a, set):
+    def __init__(self, q, a, set, type='NFA'):
         self.q = q
-        self.q.sort()
+        if type == 'DFA':
+            self.q.sort()
         self.a = a
         self.set = set
     
@@ -99,8 +100,9 @@ class Delta():
 
 file_name = 'automata_NFA.txt'
 NFA = Automata.create_NFA(file_name)
-DFA = Automata.convert_DFA(NFA)
+NFA.print_automata()
+DFA = Automata.convert_to_DFA(NFA)
+DFA.print_automata()
 
-
-
-
+create_graph_FA(NFA)
+create_graph_FA(DFA, type='DFA')
