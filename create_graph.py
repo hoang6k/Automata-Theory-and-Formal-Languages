@@ -38,20 +38,17 @@ class GraphDtb(object):
                "MATCH (to:State {name: $_to})"
                "MERGE (from)-[c:Symbol {char: $_c}]->(to)", _from=_from, _to=_to, _c=_c)
 
-def create_graph_FA(FA, type='NFA'):
+def create_graph_FA(FA, type='DFA', new='no'):
     print('\n\nTao graph cho {}:'.format(type))
     dtb = GraphDtb(password='dota2')
-    if type == 'NFA':
+    if new == 'yes':
         dtb.delete_nodes()
-    for item in FA.Q:
-        dtb.make_node(str(item))
-    for item in FA.delta:
+    for q in FA.Q:
+        dtb.make_node(str(q))
+    for delta in FA.delta:
         if type == 'NFA':
-            for q in item.set:
-                dtb.make_relationship(item.q, q, item.a)
+            for q in delta.set:
+                dtb.make_relationship(delta.q, q, delta.c)
         else:
-            dtb.make_relationship(str(item.q), str(item.set), item.a)
+            dtb.make_relationship(str(delta.q), str(delta.set), delta.c)
     dtb.close()
-
-if __name__ == "__main__":
-    create_graph_FA(sys.argv[0])
