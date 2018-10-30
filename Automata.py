@@ -70,9 +70,7 @@ class Automata():
                 for c in self.A:
                     temp += [_delta.set for _delta in self.delta if _delta.q == q and _delta.c == c]
             temp = list(set(temp))
-            print(temp)
             new_states = [q for q in temp if q not in reachable_states]
-            print(new_states)
             reachable_states = list(set(reachable_states + new_states))
             new_states.sort()
             reachable_states.sort()
