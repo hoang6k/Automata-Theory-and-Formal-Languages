@@ -61,8 +61,28 @@ class Automata():
         F = [q for q in Q if set(q) & set(self.F)]
         return Automata(Q, self.A, delta, [self.q0], F, 'DFA')
 
+    def remove_unreachable_state(self):
+        reachable_states = ['q0']
+        new_states = ['q0']
+        while 1:
+            temp = []
+            for q in new_states:
+                for c in self.A:
+                    temp += [_delta.set for _delta in self.delta if _delta.q == q and _delta.c == c]
+            temp = list(set(temp))
+            print(temp)
+            new_states = [q for q in temp if q not in reachable_states]
+            print(new_states)
+            reachable_states = list(set(reachable_states + new_states))
+            new_states.sort()
+            reachable_states.sort()
+            if len(new_states) == 0:
+                break
+        return reachable_states
+
     def minimize_DFA(self):
-        P = deque([self.F, [q for q in self.Q if q not in self.F]])
+        reachable_states = self.remove_unreachable_state()
+        P = deque([self.F, [q for q in reachable_states if q not in self.F]])
         W = deque([self.F])
         while len(W) > 0:
             A = W.popleft()

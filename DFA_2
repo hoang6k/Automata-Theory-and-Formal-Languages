@@ -1,0 +1,17 @@
+a b   #cac chu cai trong A
+6   #so luong trang thai cua tap Q
+2 3   #cac trang thai ket thuc trong F
+12   #so luong ham chuyen trong delta
+#cac ham chuyen ben duoi sau se co dang delta(q, a) = [q1, q2, ...]
+0 a 1
+0 b 0
+1 a 2
+1 b 3
+2 a 2
+2 b 2
+3 a 2
+3 b 3
+4 a 0
+4 b 4
+5 a 5
+5 b 4
