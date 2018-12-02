@@ -1,6 +1,7 @@
+from Rule import Rule
 from Delta import Delta
+from Grammar import Grammar
 from collections import deque
-
 
 class Automata():
     def __init__(self, Q, A, delta, q0, F, type):
@@ -19,7 +20,7 @@ class Automata():
         print('\n\tA:', end=' ')
         for c in self.A:
             print(c, end=' ')
-        print('\n\tDelta:')
+        print('\n\tδ:')
         for delta in self.delta:
             print('', end='\t\t')
             delta.print()
@@ -36,7 +37,6 @@ class Automata():
         while len(S) > 0:
             p = S.popleft()
             Q.append(p)
-            # print(p)
             delta_set = []
             for q in p:
                 delta_set += Delta.find_delta(self.delta, q)
@@ -51,7 +51,6 @@ class Automata():
                 q_set = list(set(q_set))
                 q_set.sort()
                 delta.append(Delta(p, c, q_set, union='yes'))
-                # delta_DFA[-1].print()
                 try:
                     Q.index(q_set)
                 except ValueError:
@@ -121,3 +120,14 @@ class Automata():
                             if _delta.set in q_set:
                                 delta.append(Delta(q, c, q_set, union='yes'))
         return Automata(Q, self.A, delta, q0, F, 'DFA')
+
+    def convert_to_Grammar(self) -> Grammar:
+        Vt = self.A
+        Vn = self.Q
+        S = self.q0
+        P = []
+        for item in self.delta:
+            P.append(Rule(item.q, item.c, item.set[0], 'right'))
+            if item.set[0] in self.F:
+                P.append(Rule(item.q, item.c, '', 'right'))
+        return Grammar(Vt, Vn, S, P, 'right')

@@ -8,7 +8,7 @@ class Delta():
             self.set.sort()
 
     def print(self):
-        print('delta({}, {}) = {}'.format(self.q, self.c, self.set))
+        print('δ({}, {}) = {}'.format(self.q, self.c, self.set))
 
     @staticmethod
     def find_delta(delta, q):

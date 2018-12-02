@@ -1,0 +1,14 @@
+a b   #cac chu cai trong Vt
+S A B   #cac chu cai trong Vn
+S   #chu cai bat dau
+9   #so luong luat sinh cua P
+#cac luat sinh ben duoi sau se co dang A -> b_1b_2...b_n(B)
+S a A
+S b B
+A a S
+A b B
+B b B
+B b S
+S a
+B a
+B b

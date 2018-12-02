@@ -1,0 +1,11 @@
+a b   #cac chu cai trong Vt
+S A B   #cac chu cai trong Vn
+S   #chu cai bat dau
+5   #so luong luat sinh cua P
+#cac luat sinh ben duoi sau se co dang A -> x_1x_2...x_n (x_i thuoc (V U T)*Δ)
+S a A B
+A b B b
+B A
+S a A
+A b b
+abbbb

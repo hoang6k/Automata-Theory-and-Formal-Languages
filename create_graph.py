@@ -1,4 +1,3 @@
-import sys
 from neo4j.v1 import GraphDatabase
 
 class GraphDtb(object):
@@ -47,8 +46,29 @@ def create_graph_FA(FA, type='DFA', new='no'):
         dtb.make_node(str(q))
     for delta in FA.delta:
         if type == 'NFA':
-            for q in delta.set:
-                dtb.make_relationship(delta.q, q, delta.c)
+            if isinstance(delta.set, list):
+                for q in delta.set:
+                    dtb.make_relationship(delta.q, q, delta.c)
+            else:
+                dtb.make_relationship(delta.q, delta.set, delta.c)
+        else:
+            dtb.make_relationship(str(delta.q), str(delta.set), delta.c)
+    dtb.close()
+
+def create_graph_DT(DT):
+    print('\n\nTao graph cho {}:'.format(type))
+    dtb = GraphDtb(password='dota2')
+    if new == 'yes':
+        dtb.delete_nodes()
+    for q in FA.Q:
+        dtb.make_node(str(q))
+    for delta in FA.delta:
+        if type == 'NFA':
+            if isinstance(delta.set, list):
+                for q in delta.set:
+                    dtb.make_relationship(delta.q, q, delta.c)
+            else:
+                dtb.make_relationship(delta.q, delta.set, delta.c)
         else:
             dtb.make_relationship(str(delta.q), str(delta.set), delta.c)
     dtb.close()
