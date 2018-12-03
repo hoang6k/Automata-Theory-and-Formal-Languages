@@ -1,7 +1,6 @@
 from Delta import Delta
 from Automata import Automata
 
-
 def create_FA(file_name, type):
     with open(file_name, 'r') as f:
         lines = f.readlines()

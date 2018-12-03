@@ -1,0 +1,10 @@
+a b   #cac chu cai trong Vt
+A S   #cac chu cai trong Vn
+S   #chu cai bat dau
+5   #so luong luat sinh cua P
+#cac luat sinh ben duoi sau se co dang A -> (B)b_1b_2...b_n
+S A a
+S a b
+A A a
+A S b a
+A b

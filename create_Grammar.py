@@ -16,8 +16,10 @@ def create_Grammar(file_name: str, type: str):
         temp = lines[i + 5].split()
         if type == 'CFG':
             P.append(Rule(temp[0], temp[1], '', type))
-        elif temp[-1] in Vn and type != 'G':
+        elif type == 'right' and temp[-1] in Vn:
             P.append(Rule(temp[0], ''.join(temp[1:-1]), temp[-1], type))
+        elif type == 'left' and temp[1] in Vn:
+            P.append(Rule(temp[0], ''.join(temp[2:]), temp[1], type))
         else:
             P.append(Rule(temp[0], ''.join(temp[1:]), '', type))
     if type == 'CFG':

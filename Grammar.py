@@ -28,6 +28,12 @@ class Grammar():
             rule.print()
     
     def convert_to_NFA(self):
+        if self.type == 'right':
+            return self.convert_Gp_to_NFA()
+        else:
+            return self.convert_Gt_to_NFA()
+
+    def convert_Gp_to_NFA(self):
         from Delta import Delta
         from Automata import Automata
         Q = self.Vn
@@ -71,7 +77,52 @@ class Grammar():
                     Q.append(V_new)
                 delta.append(Delta(Q[-1], item.x[-1], F[0]))
         return Automata(Q, A, delta, q0, F, 'NFA')
-    
+
+    def convert_Gt_to_NFA(self):
+        from Delta import Delta
+        from Automata import Automata
+        Q = self.Vn
+        A = self.Vt
+        q0 = self.S
+        delta = []
+        count = 0
+        for item in self.P:
+            if item.B == '':
+                F = ['V_f']
+                Q.append('V_f')
+                break
+        for item in self.P:
+            if item.B != '':
+                if len(item.x) == 1:
+                    delta.append(Delta(item.A, item.x, item.B))
+                    continue
+                count += 1
+                V_new = 'V_' + str(count)
+                Q.append(V_new)
+                delta.append(Delta(item.A, item.x[-1], V_new))
+                for i in range(-2, -len(item.x) + 1, -1):
+                    count += 1
+                    V_new = 'V_' + str(count)
+                    delta.append(Delta(Q[-1], item.x[i], V_new))
+                    Q.append(V_new)
+                delta.append(Delta(Q[-1], item.x[0], item.B))
+        for item in self.P:            
+            if item.B == '':
+                if len(item.x) == 1:
+                    delta.append(Delta(item.A, item.x, F[0]))
+                    continue
+                count += 1
+                V_new = 'V_' + str(count)
+                Q.append(V_new)
+                delta.append(Delta(item.A, item.x[-1], V_new))
+                for i in range(-2, -len(item.x) + 1, -1):
+                    count += 1
+                    V_new = 'V_' + str(count)
+                    delta.append(Delta(Q[-1], item.x[i], V_new))
+                    Q.append(V_new)
+                delta.append(Delta(Q[-1], item.x[0], F[0]))
+        return Automata(Q, A, delta, q0, F, 'NFA')
+
     def convert_to_Gc(self):
         from Rule import Rule
         from Grammar import Grammar
