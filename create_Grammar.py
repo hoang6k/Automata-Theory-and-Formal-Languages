@@ -14,10 +14,12 @@ def create_Grammar(file_name: str, type: str):
     num_rules = int(lines[3])
     for i in range(num_rules):
         temp = lines[i + 5].split()
-        if type == 'CFG' or temp[-1] not in Vn:
-            P.append(Rule(temp[0], ''.join(temp[1:]), '', type))
-        else:
+        if type == 'CFG':
+            P.append(Rule(temp[0], temp[1], '', type))
+        elif temp[-1] in Vn and type != 'G':
             P.append(Rule(temp[0], ''.join(temp[1:-1]), temp[-1], type))
+        else:
+            P.append(Rule(temp[0], ''.join(temp[1:]), '', type))
     if type == 'CFG':
         string = lines[-1]
         return Grammar(Vt, Vn, S, P, type), string
